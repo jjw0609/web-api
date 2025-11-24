@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Child (iframe)</title>
+</head>
+<body>
+  <h2>Child (iframe)</h2>
+  <div id="postMsgBox">Message received from parent (postMessage): <span id="parentMsg"></span></div>
+  <script>
+    const parentMsgSpan = document.getElementById('parentMsg');
+    // Listen for postMessage
+    window.addEventListener('message', function(event) {
+      if (event.origin !== window.origin) {
+        return;
+      }
+
+      // 2-1. postMessage
+      if (!event.ports || event.ports.length === 0) {
+        console.log('postMessage', event);
+        parentMsgSpan.textContent = event.data;
+        // Respond to parent by event.source
+        event.source.postMessage('[child] postMessage (event.source)', event.origin);
+        // send message by window.parent
+        window.parent.postMessage(`[child] postMessage (window.parent): "${event.data}"`, event.origin);
+        return;
+      }
+    });
+  </script>
+</body>
+</html> 

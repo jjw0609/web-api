@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Child (iframe)</title>
+</head>
+<body>
+  <h2>Child (iframe)</h2>
+  <div id="channelMsgBox">Message received from parent (MessageChannel): <span id="parentChannelMsg"></span></div>
+  <script>
+    const parentChannelMsgSpan = document.getElementById('parentChannelMsg');
+
+    // Listen for MessageChannel port
+    window.addEventListener('message', function(event) {
+      if (event.origin !== window.origin) {
+        return;
+      }
+
+      // 2-2. MessageChannel port
+      const port2 = event.ports[0];
+      console.log('MessageChannel port', port2);
+      if (port2) {
+        port2.onmessage = function(e) {
+          parentChannelMsgSpan.textContent = e.data;
+          // Respond to parent
+          port2.postMessage('MessageChannel response');
+        };
+        // Child sends message to parent first (MessageChannel)
+        port2.postMessage('From child: MessageChannel hello!');
+      }
+    });
+  </script>
+</body>
+</html> 

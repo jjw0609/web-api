@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Child (iframe) - BroadcastChannel</title>
+</head>
+<body>
+  <h2>Child (iframe) - BroadcastChannel</h2>
+  <div id="parentMsgBox">Message sent by parent: <span id="parentMsg"></span></div>
+  <script>
+    const CHANNEL_NAME = 'lecture-3-broadcast';
+    const channel = new BroadcastChannel(CHANNEL_NAME);
+
+    const parentMsgSpan = document.getElementById('parentMsg');
+    
+    // Listen for messages from parent
+    channel.onmessage = function(event) {
+      if (event.data) {
+        parentMsgSpan.textContent = event.data.message;
+        // Send response message to parent
+        channel.postMessage({
+          from: 'child',
+          message: 'Response from child (iframe) via BroadcastChannel!',
+        });
+      }
+    };
+  </script>
+</body>
+</html> 
